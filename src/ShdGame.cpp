@@ -35,6 +35,9 @@ int ShdGame::h = 540;
 bool ShdGame::enable_2_pass_pp = false;
 string ShdGame::app_path = "./";
 
+float ShdGame::mouse[2] = {0, 0};
+int ShdGame::mouse_state = 0;
+int ShdGame::mouse_button = 0;
 
 /**
    Window resize callback
@@ -127,7 +130,15 @@ void ShdGame::main_render() {
 	// Add frame count
 	loc = current_shader
 		->get_uniform_location("frame_count");
+
+
+        // Add mouse info
+	// Width
+	loc = current_shader
+		->get_uniform_location("mouse");
 	
+	glUniform2fv(loc, 1, mouse);
+        
 	glUniform1i(loc,frame_count);
 	
 	glViewport(0,0,w,h);
@@ -377,15 +388,32 @@ void ShdGame::init_watch_files() {
 	fcntl(inotifyFd, F_SETFL, flags | O_NONBLOCK);
 }
 
+// Mouse action listener
+void ShdGame::mouseFunc(int button, int state, int x, int y) {
+    float ratio = (float)w/(float)h;
+    mouse[0] = (x / float(w) * ratio - 0.5 * ratio);
+    mouse[1] = (h - y) / float(h) - 0.5;
+    mouse_button = button;
+    mouse_state = state;
+}
+
+// Mouse motion listener
+void ShdGame::mouseMotionFunc(int x, int y) {
+    float ratio = (float)w/(float)h;
+    mouse[0] = (x / float(w) * ratio - 0.5 * ratio);
+    mouse[1] = (h - y) / float(h) - 0.5;
+}
+
 void ShdGame::apploop() {
 	glutInit(&argc,argv);
 	glutInitWindowSize(w,h);
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 	// We'll show window only if not rendering a frame
+        
 	glutCreateWindow("The Game");
 	glutHideWindow();
-	
+        
 	init_watch_files();
 	
 	// http://gamedev.stackexchange.com/questions/22785/
@@ -415,8 +443,11 @@ void ShdGame::apploop() {
 	}
 	
 	// Assign callbacks
-	glutReshapeFunc(resize);
 	glutDisplayFunc(render);
+        glutReshapeFunc(resize);
+        glutMouseFunc(mouseFunc);
+        glutMotionFunc(mouseMotionFunc);
+        glutPassiveMotionFunc(mouseMotionFunc);
 	glutIdleFunc(render);
 	
 	// Create the plane for render-to-texture

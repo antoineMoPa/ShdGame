@@ -60,7 +60,12 @@ public:
 	static int w;
 	// Window height
 	static int h;
-	
+
+        // Mouse position
+        static float mouse[2];
+        static int mouse_state;
+        static int mouse_button;
+
 	// The depth buffer
 	static GLuint depth_buf;
 	static FrameBuffer fb;
@@ -115,8 +120,12 @@ public:
 	static void init_watch_files();
 	
 	static void apploop();
-
+        
 	static void start(int _argc, char ** _argv);
+
+        static void mouseFunc(int, int, int, int);
+        
+        static void mouseMotionFunc(int x, int y);
 };
 
 #endif

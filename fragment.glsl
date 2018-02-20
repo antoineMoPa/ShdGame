@@ -8,7 +8,10 @@ out vec4 color;
 
 in vec2 UV;
 
-uniform float time, ratio;
+uniform float time,
+        ratio;
+
+uniform vec2 mouse;
 
 #define PI 3.1416
 #define PI2 6.2832
@@ -17,6 +20,9 @@ vec3 light_color = vec3(1.0f,1.0f,1.0f);
 
 void main(){
     vec2 p = UV - 0.5;
+    vec4 col = vec4(0.0);
+    vec2 m = mouse;
+    
     p.x *= ratio;
     float fuzz = 0.03 * cos(p.x * 10.0 + 2.0 * time * PI2);
 
@@ -35,8 +41,13 @@ void main(){
     vec4 tp_blue = vec4(0.0, 0.0, 1.2 * f_blue, 1.0);
     vec4 tp_white = vec4(f_white, f_white, f_white, 1.0);
     
-    color = tp_blue + tp_orange + tp_white;
+    col = tp_blue + tp_orange + tp_white;
 
-    color *= 1.0 + 130.0 * fuzz;
-    color *= 1.0 - pow(3.0 * length(p), 2.0);
+    col *= 1.0 + 130.0 * fuzz;
+    col *= 1.0 - pow(3.0 * length(p), 2.0);
+
+    col.rgb += cos(100.0 * distance(m, p));
+    col.a = 1.0;
+    
+    color = col;
 }
