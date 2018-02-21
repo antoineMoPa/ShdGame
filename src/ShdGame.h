@@ -36,92 +36,92 @@ using ShaderMap = std::map<std::string, Shader>;
 
 class ShdGame{
 public:
-	static Shader * current_shader;
-	static Shader post_process_shader;
-	// This frame counter resets at frame resize
-	static int frame_count;
+    static Shader * current_shader;
+    static Shader post_process_shader;
+    // This frame counter resets at frame resize
+    static int frame_count;
 
-	// The texture that we can post process
-	// (and render on the quad)
-	
-	static TextureMap textures;
-	static int inotifyFd, wd;
-	static char *p; // TODO: what is this?
-	static struct inotify_event *event;
-	static bool enable_2_pass_pp;
-	static const int pass_total = 3;
-	static FrameBuffer fbs [pass_total + 1];
+    // The texture that we can post process
+    // (and render on the quad)
+    
+    static TextureMap textures;
+    static int inotifyFd, wd;
+    static char *p; // TODO: what is this?
+    static struct inotify_event *event;
+    static bool enable_2_pass_pp;
+    static const int pass_total = 3;
+    static FrameBuffer fbs [pass_total + 1];
 
-	// Default app path
-	static string app_path;
-	static ShaderMap shaders;
+    // Default app path
+    static string app_path;
+    static ShaderMap shaders;
 
-	// Window width
-	static int w;
-	// Window height
-	static int h;
+    // Window width
+    static int w;
+    // Window height
+    static int h;
 
         // Mouse position
         static float mouse[2];
         static int mouse_state;
         static int mouse_button;
 
-	// The depth buffer
-	static GLuint depth_buf;
-	static FrameBuffer fb;
-	
-	// The data of the render-to-texture quad
-	static GLuint quad_vertexbuffer;
+    // The depth buffer
+    static GLuint depth_buf;
+    static FrameBuffer fb;
+    
+    // The data of the render-to-texture quad
+    static GLuint quad_vertexbuffer;
 
-	static int argc;
-	static char ** argv;
-	static float curr_time;
+    static int argc;
+    static char ** argv;
+    static float curr_time;
 
-	static void resize(int rhs_w, int rhs_h);
+    static void resize(int rhs_w, int rhs_h);
 
-	static void load_default_shaders();
+    static void load_default_shaders();
 
-	/*
-	  Returns current time, either as given by 
-	  argument or form system clock
-	*/
-	static float get_frame_time();
-	
-	static void main_render();
-	
-	static void post_process_render(int pass);
+    /*
+      Returns current time, either as given by 
+      argument or form system clock
+    */
+    static float get_frame_time();
+    
+    static void main_render();
+    
+    static void post_process_render(int pass);
 
-	static void two_pass_pp();
-	
-	static void render();
-	
-	/**
-	   Creates the plane that will be used to render everything on
-	 */
-	static void create_render_quad();
+    static void two_pass_pp();
+    
+    static void render();
+    
+    /**
+       Creates the plane that will be used to render everything on
+     */
+    static void create_render_quad();
 
-	/*
-	  Gets a numeric arg like "--meow=2" or "--frame=42.0"
-	  where name is "meow" or "frame"
-	  
-	  returns the number, if present & valid
-	  returns -1.0 if arg is not present
-	  returns -2.0 if an error is detected, in which case it 
-	  will print an error message.
-	*/
-	static float get_positive_numeric_arg(const char * name);
-	static string get_string_arg(const char * name);
-	
-	/*
-	  Mandatory refs.:
-	  https://stackoverflow.com/questions/5616092/non-blocking-call-for-reading-descriptor
-	  http://man7.org/tlpi/code/online/diff/inotify/demo_inotify.c.html
-	 */
-	static void init_watch_files();
-	
-	static void apploop();
+    /*
+      Gets a numeric arg like "--meow=2" or "--frame=42.0"
+      where name is "meow" or "frame"
+      
+      returns the number, if present & valid
+      returns -1.0 if arg is not present
+      returns -2.0 if an error is detected, in which case it 
+      will print an error message.
+    */
+    static float get_positive_numeric_arg(const char * name);
+    static string get_string_arg(const char * name);
+    
+    /*
+      Mandatory refs.:
+      https://stackoverflow.com/questions/5616092/non-blocking-call-for-reading-descriptor
+      http://man7.org/tlpi/code/online/diff/inotify/demo_inotify.c.html
+     */
+    static void init_watch_files();
+    
+    static void apploop();
         
-	static void start(int _argc, char ** _argv);
+    static void start(int _argc, char ** _argv);
 
         static void mouseFunc(int, int, int, int);
         
